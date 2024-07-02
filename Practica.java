@@ -1,3 +1,3 @@
 public class Practica {
-    hola
+    hola como stas
 }
