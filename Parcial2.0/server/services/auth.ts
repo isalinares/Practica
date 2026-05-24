@@ -1,4 +1,4 @@
-import { createClerkClient } from "@clerk/backend";
+import { createClerkClient, verifyToken as clerkVerifyToken } from "@clerk/backend";
 
 const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
@@ -7,12 +7,17 @@ const clerkClient = createClerkClient({
 export async function verifyToken(req) {
   const authHeader = req.headers.get("authorization");
   if (!authHeader) return null;
-  
+
   const token = authHeader.replace("Bearer ", "");
   try {
-    const session = await clerkClient.verifyToken(token);
+    // En @clerk/backend v3 la verificacion es la funcion independiente
+    // verifyToken(token, { secretKey }); el cliente NO expone .verifyToken().
+    const session = await clerkVerifyToken(token, {
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
     return session;
   } catch (e) {
+    console.error("verifyToken error:", e?.message);
     return null;
   }
 }

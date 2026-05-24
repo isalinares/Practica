@@ -8,21 +8,39 @@ let useShiny = false;
 async function initClerk() {
   try {
     const publishableKey = window.CLERK_PUBLISHABLE_KEY;
-    if (!publishableKey || publishableKey === "YOUR_CLERK_PUBLISHABLE_KEY") {
-      console.log("Clerk not configured");
+    if (
+      !publishableKey ||
+      publishableKey === "YOUR_CLERK_PUBLISHABLE_KEY" ||
+      publishableKey === "CLERK_KEY_PLACEHOLDER" ||
+      !publishableKey.startsWith("pk_")
+    ) {
+      console.warn("Clerk no configurado: falta CLERK_PUBLISHABLE_KEY valida en el .env del servidor.");
       return;
     }
-    
-    await Clerk.load({
-      publishableKey,
-    });
-    clerkClient = Clerk;
-    
-    if (Clerk.user) {
+
+    // clerk.browser.js@5 (CDN) lee la publishable key del atributo
+    // data-clerk-publishable-key del <script> y crea automaticamente la
+    // instancia global window.Clerk. Esperamos a que este disponible.
+    let tries = 0;
+    while (!window.Clerk && tries < 100) {
+      await new Promise((r) => setTimeout(r, 50));
+      tries++;
+    }
+    if (!window.Clerk) {
+      console.warn("Clerk no se cargo desde el CDN.");
+      return;
+    }
+
+    clerkClient = window.Clerk;
+    if (!clerkClient.loaded) {
+      await clerkClient.load();
+    }
+
+    if (clerkClient.user) {
       currentUser = {
-        id: Clerk.user.id,
-        email: Clerk.user.primaryEmailAddress?.emailAddress,
-        name: Clerk.user.firstName || Clerk.user.username || "Player",
+        id: clerkClient.user.id,
+        email: clerkClient.user.primaryEmailAddress?.emailAddress,
+        name: clerkClient.user.firstName || clerkClient.user.username || "Player",
       };
       loadShiny();
     }

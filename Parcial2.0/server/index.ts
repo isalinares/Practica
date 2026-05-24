@@ -9,7 +9,21 @@ import { createCheckoutSession, handleWebhook } from "./services/stripe.js";
 const app = new Hono();
 
 const CLERK_KEY = process.env.CLERK_PUBLISHABLE_KEY || "";
-console.log("Clerk key loaded:", CLERK_KEY ? "Yes (starts with " + CLERK_KEY.slice(0, 10) + "...)" : "No");
+if (CLERK_KEY && CLERK_KEY.startsWith("pk_")) {
+  console.log("Clerk publishable key cargada:", "Si (empieza con " + CLERK_KEY.slice(0, 12) + "...)");
+} else {
+  console.warn(
+    "ADVERTENCIA: CLERK_PUBLISHABLE_KEY no esta configurada o es invalida. " +
+    "El login con Clerk estara deshabilitado en el frontend. " +
+    "Pega tu publishable key (pk_test_...) en el archivo .env."
+  );
+}
+if (!process.env.CLERK_SECRET_KEY || !process.env.CLERK_SECRET_KEY.startsWith("sk_")) {
+  console.warn(
+    "ADVERTENCIA: CLERK_SECRET_KEY no esta configurada o es invalida. " +
+    "Los endpoints protegidos (/api/user, /api/user/shiny, /api/stripe/create-checkout) no podran verificar la sesion."
+  );
+}
 
 app.use("/*", cors({
   origin: "*",
@@ -355,7 +369,7 @@ Bun.serve({
     }
     if (url.pathname === "/" || url.pathname === "/index.html") {
       let html = await Bun.file("./public/index.html").text();
-      html = html.replace("CLERK_KEY_PLACEHOLDER", CLERK_KEY);
+      html = html.replaceAll("CLERK_KEY_PLACEHOLDER", CLERK_KEY);
       return new Response(html, { headers: { "Content-Type": "text/html" } });
     }
     if (url.pathname.endsWith(".css")) {
