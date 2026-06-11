@@ -1,0 +1,7 @@
+node_modules/
+.env
+*.zip
+bun.lock
+package-lock.json
+checkers-proy2/
+tradeup-tcg-main/
