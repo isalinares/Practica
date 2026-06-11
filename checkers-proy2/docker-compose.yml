@@ -1,0 +1,72 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: checkers-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - checkers-net
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 10s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: checkers-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb:27017/checkers
+      - IA_SERVICE_URL=http://ia-service:3001
+      - CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - NODE_ENV=development
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - checkers-net
+
+  ia-service:
+    build:
+      context: ./ia-service
+      dockerfile: Dockerfile
+    container_name: checkers-ia
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - LLM_MOCK=true
+      - NODE_ENV=development
+    networks:
+      - checkers-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: checkers-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://backend:3000
+      - VITE_CLERK_PUBLISHABLE_KEY=${VITE_CLERK_PUBLISHABLE_KEY}
+      - API_PROXY_TARGET=http://backend:3000
+    depends_on:
+      - backend
+    networks:
+      - checkers-net
+
+volumes:
+  mongo-data:
+
+networks:
+  checkers-net:
+    driver: bridge
