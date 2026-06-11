@@ -1,0 +1,53 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "♛ Dames" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e7]: ♛
+        - generic [ref=e8]: Dames
+      - generic [ref=e9]:
+        - link "Jugar" [ref=e10] [cursor=pointer]:
+          - /url: /game
+        - link "Ranking" [ref=e11] [cursor=pointer]:
+          - /url: /ranking
+        - link "Skins" [ref=e12] [cursor=pointer]:
+          - /url: /skins
+        - link "Ingresar" [ref=e13] [cursor=pointer]:
+          - /url: /login
+  - main [ref=e14]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - heading "Skins" [level=1] [ref=e18]
+        - paragraph [ref=e19]: personaliza tu tablero
+      - generic [ref=e21]:
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - heading "Clásico" [level=3] [ref=e47]
+            - generic [ref=e48]: Gratis
+          - button "Desbloqueada" [disabled] [ref=e55]
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - heading "Rosa" [level=3] [ref=e81]
+            - generic [ref=e82]: Gratis
+          - button "Desbloqueada" [disabled] [ref=e89]
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - heading "Esmeralda" [level=3] [ref=e115]
+            - generic [ref=e116]: $4.99
+          - button "Comprar" [ref=e123]
+        - generic [ref=e147]:
+          - generic [ref=e148]:
+            - heading "Zafiro" [level=3] [ref=e149]
+            - generic [ref=e150]: $4.99
+          - button "Comprar" [ref=e157]
+        - generic [ref=e181]:
+          - generic [ref=e182]:
+            - heading "Vintage" [level=3] [ref=e183]
+            - generic [ref=e184]: $2.99
+          - button "Comprar" [ref=e191]
+        - generic [ref=e215]:
+          - generic [ref=e216]:
+            - heading "Noir" [level=3] [ref=e217]
+            - generic [ref=e218]: $2.99
+          - button "Comprar" [ref=e225]
+  - contentinfo [ref=e226]: Dames — un juego de damas con alma

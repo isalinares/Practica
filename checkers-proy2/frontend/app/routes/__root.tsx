@@ -1,4 +1,5 @@
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
+import { useAuth, UserButton, SignInButton } from '@clerk/clerk-react'
 import '../global.css'
 
 export const rootRoute = createRootRoute({
@@ -6,6 +7,8 @@ export const rootRoute = createRootRoute({
 })
 
 function RootLayout() {
+  const { isSignedIn } = useAuth()
+
   return (
     <div className="min-h-screen bg-warmblack flex flex-col">
       <nav className="border-b border-rose-800/20 bg-warmblack/80 backdrop-blur-md fixed top-0 w-full z-50">
@@ -29,9 +32,13 @@ function RootLayout() {
             <Link to="/skins" className="text-cream/60 hover:text-rose-300 transition-colors duration-300">
               Skins
             </Link>
-            <Link to="/login" className="px-4 py-1.5 border border-rosegold/40 rounded-full text-rosegold-light hover:bg-rosegold/10 transition-all duration-300">
-              Ingresar
-            </Link>
+            {isSignedIn ? (
+              <UserButton appearance={{ elements: { userButtonAvatarBox: 'w-8 h-8' } }} />
+            ) : (
+              <Link to="/login" className="px-4 py-1.5 border border-rosegold/40 rounded-full text-rosegold-light hover:bg-rosegold/10 transition-all duration-300">
+                Ingresar
+              </Link>
+            )}
           </div>
         </div>
       </nav>

@@ -7,23 +7,42 @@ const BLACK = 2
 const RED_KING = 3
 const BLACK_KING = 4
 
+interface SkinColors {
+  primary: string
+  secondary: string
+  accent: string
+  piecePrimary?: string
+  pieceSecondary?: string
+}
+
 interface BoardProps {
   board: number[][]
   onMove: (from: [number, number], to: [number, number]) => void
   legalMoves: Array<{ from: [number, number]; to: [number, number] }>
   disabled: boolean
   playerColor: 'red' | 'black'
+  skin?: SkinColors
 }
 
 function getLegalTargets(moves: Array<{ from: [number, number]; to: [number, number] }>, from: [number, number]): [number, number][] {
   return moves.filter(m => m.from[0] === from[0] && m.from[1] === from[1]).map(m => m.to)
 }
 
-export function Board({ board, onMove, legalMoves, disabled, playerColor }: BoardProps) {
+export function Board({ board, onMove, legalMoves, disabled, playerColor, skin }: BoardProps) {
   const [selected, setSelected] = useState<[number, number] | null>(null)
   const [hovered, setHovered] = useState<[number, number] | null>(null)
 
   const isPlayable = !disabled
+
+  const defaultSkin: SkinColors = {
+    primary: '#4a0e2e',
+    secondary: '#faf6f0',
+    accent: '#b76e79',
+    piecePrimary: '#f43f5e',
+    pieceSecondary: '#faf6f0',
+  }
+
+  const currentSkin = skin || defaultSkin
 
   const handleSquareClick = useCallback((row: number, col: number) => {
     if (!isPlayable) return
@@ -74,17 +93,18 @@ export function Board({ board, onMove, legalMoves, disabled, playerColor }: Boar
     const isRed = piece === RED || piece === RED_KING
     const isKing = piece === RED_KING || piece === BLACK_KING
 
+    const pieceColor = isRed ? currentSkin.piecePrimary : currentSkin.pieceSecondary
+
     return (
-      <div className={`relative w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center
-        transition-all duration-300 ${
-          isRed
-            ? 'bg-gradient-to-br from-rose-400 to-rose-700 shadow-lg shadow-rose-900/30'
-            : 'bg-gradient-to-br from-cream to-cream-dark shadow-lg shadow-black/20'
-        }
-        ${isKing ? 'ring-2 ring-rosegold/60 ring-offset-1 ring-offset-warmblack/50' : ''}
-      `}>
+      <div
+        className={`relative w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center
+          transition-all duration-300 shadow-lg
+          ${isKing ? 'ring-2 ring-rosegold/60 ring-offset-1 ring-offset-warmblack/50' : ''}
+        `}
+        style={{ backgroundColor: pieceColor }}
+      >
         {isKing && (
-          <span className={`text-xs md:text-sm ${isRed ? 'text-rose-200' : 'text-rosegold'}`}>♛</span>
+          <span className={`text-xs md:text-sm ${isRed ? 'text-white/80' : 'text-rosegold'}`}>♛</span>
         )}
       </div>
     )
@@ -92,7 +112,7 @@ export function Board({ board, onMove, legalMoves, disabled, playerColor }: Boar
 
   return (
     <div className="relative">
-      <div className="rounded-2xl overflow-hidden border-2 border-cream/10 shadow-2xl shadow-black/40">
+      <div className="rounded-2xl overflow-hidden border-2 shadow-2xl shadow-black/40" style={{ borderColor: currentSkin.accent + '30' }}>
         <div className="grid grid-cols-8">
           {Array.from({ length: BOARD_SIZE * BOARD_SIZE }).map((_, i) => {
             const row = Math.floor(i / BOARD_SIZE)
@@ -103,17 +123,19 @@ export function Board({ board, onMove, legalMoves, disabled, playerColor }: Boar
             const target = isLegalTarget(row, col)
             const hover = hovered && hovered[0] === row && hovered[1] === col
 
+            const squareColor = isDark ? currentSkin.accent + '60' : currentSkin.secondary + '20'
+
             return (
               <div
                 key={i}
                 className={`
                   relative w-12 h-12 md:w-16 md:h-16 flex items-center justify-center
                   cursor-pointer transition-all duration-200
-                  ${isDark ? 'bg-burgundy/60' : 'bg-cream/5'}
                   ${sel ? 'ring-2 ring-rose-400 ring-inset' : ''}
                   ${target ? 'bg-rose-500/20' : ''}
                   ${hover && piece !== EMPTY ? 'brightness-110' : ''}
                 `}
+                style={{ backgroundColor: squareColor }}
                 onClick={() => handleSquareClick(row, col)}
                 onMouseEnter={() => setHovered([row, col])}
                 onMouseLeave={() => setHovered(null)}

@@ -1,0 +1,62 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "♛ Dames" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e7]: ♛
+        - generic [ref=e8]: Dames
+      - generic [ref=e9]:
+        - link "Jugar" [ref=e10] [cursor=pointer]:
+          - /url: /game
+        - link "Ranking" [ref=e11] [cursor=pointer]:
+          - /url: /ranking
+        - link "Skins" [ref=e12] [cursor=pointer]:
+          - /url: /skins
+        - link "Ingresar" [ref=e13] [cursor=pointer]:
+          - /url: /login
+  - main [ref=e14]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - heading "Bienvenida" [level=1] [ref=e18]
+        - paragraph [ref=e19]: inicia sesión para jugar
+      - generic [ref=e25]:
+        - generic [ref=e27]:
+          - button "Sign in with Google Continue with Google" [ref=e30] [cursor=pointer]:
+            - generic [ref=e31]:
+              - img "Sign in with Google" [ref=e33]
+              - generic [ref=e34]: Continue with Google
+          - paragraph [ref=e37]: or
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - generic [ref=e43]:
+                - generic [ref=e45]: Email address
+                - textbox "Email address" [active] [ref=e46]:
+                  - /placeholder: Enter your email address
+                  - text: pocow86413@ocuser.com
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: Password
+                    - generic:
+                      - textbox "Password":
+                        - /placeholder: Enter your password
+                      - button "Show password":
+                        - img
+            - button "Continue" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]:
+                - text: Continue
+                - img [ref=e51]
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - generic [ref=e55]: Don’t have an account?
+            - link "Sign up" [ref=e56] [cursor=pointer]:
+              - /url: https://regular-goshawk-1.accounts.dev/sign-up?__clerk_db_jwt=dvb_3F0DgUeZZnFWIXT8vQwSjFpsv2H
+          - generic [ref=e58]:
+            - generic [ref=e60]:
+              - paragraph [ref=e61]: Secured by
+              - link "Clerk logo" [ref=e62] [cursor=pointer]:
+                - /url: https://go.clerk.com/components
+                - img [ref=e63]
+            - paragraph [ref=e68]: Development mode
+  - contentinfo [ref=e22]: Dames — un juego de damas con alma

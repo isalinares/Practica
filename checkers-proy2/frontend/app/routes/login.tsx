@@ -1,5 +1,6 @@
-import { createRoute, Link } from '@tanstack/react-router'
+import { createRoute } from '@tanstack/react-router'
 import { rootRoute } from './__root'
+import { SignIn } from '@clerk/clerk-react'
 
 export const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -22,32 +23,23 @@ function LoginPage() {
         </div>
 
         <div className="bg-cream/5 border border-cream/10 rounded-2xl p-8 space-y-6 backdrop-blur-sm">
-          <div className="space-y-2">
-            <p className="text-cream/60 text-sm tracking-widest uppercase">
-              Próximamente
-            </p>
-            <p className="text-cream/30 text-sm font-body italic">
-              El registro con Clerk estará disponible próximamente.
-              Por ahora, puedes explorar el juego.
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <Link
-              to="/game"
-              className="block w-full text-center px-6 py-3 bg-rose-500/10 border border-rose-400/20 rounded-xl
-                         text-rose-200 font-display text-sm tracking-widest uppercase
-                         hover:bg-rose-500/20 transition-all duration-300"
-            >
-              Jugar como Invitado
-            </Link>
-            <Link
-              to="/"
-              className="block w-full text-center px-6 py-3 text-cream/40 text-sm tracking-widest uppercase
-                         hover:text-cream/60 transition-all duration-300"
-            >
-              Volver al inicio
-            </Link>
+          <div className="flex justify-center">
+            <SignIn
+              appearance={{
+                elements: {
+                  rootBox: 'w-full',
+                  card: 'bg-transparent shadow-none border-0',
+                  headerTitle: 'hidden',
+                  headerSubtitle: 'hidden',
+                  socialButtonsBlockButton: 'bg-rose-500/10 border border-rose-400/20 text-rose-200 hover:bg-rose-500/20',
+                  formButtonPrimary: 'bg-rosegold hover:bg-rosegold/80 text-warmblack',
+                  footerActionLink: 'text-rosegold-light hover:text-rose-300',
+                  formFieldLabel: 'text-cream/60',
+                  formFieldInput: 'bg-cream/5 border-cream/10 text-cream',
+                }
+              }}
+              routing="hash"
+            />
           </div>
         </div>
       </div>

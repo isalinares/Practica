@@ -1,11 +1,15 @@
-import { createRoute, Link } from '@tanstack/react-router'
+import { createRoute, Link, useSearch } from '@tanstack/react-router'
 import { rootRoute } from '../__root'
 import { Board } from '../../components/Board'
 import { useState, useEffect, useCallback } from 'react'
+import { useAuth } from '@clerk/clerk-react'
 
 export const gameIdRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/game/$id',
+  validateSearch: (search: Record<string, unknown>) => ({
+    skinId: (search.skinId as string) || '',
+  }),
   component: GamePage,
 })
 
@@ -162,14 +166,37 @@ function checkGameOver(board: number[][]): string {
   return 'playing'
 }
 
+interface SkinColors {
+  primary: string
+  secondary: string
+  accent: string
+  piecePrimary?: string
+  pieceSecondary?: string
+}
+
 function GamePage() {
   const { id } = gameIdRoute.useParams()
+  const { skinId } = gameIdRoute.useSearch()
   const [board, setBoard] = useState<number[][]>(createInitialBoard)
   const [turn, setTurn] = useState<'red' | 'black'>('red')
   const [playerColor] = useState<'red' | 'black'>('red')
   const [status, setStatus] = useState<string>('playing')
   const [moveCount, setMoveCount] = useState(0)
   const [thinking, setThinking] = useState(false)
+  const [skin, setSkin] = useState<SkinColors | undefined>(undefined)
+
+  useEffect(() => {
+    if (skinId) {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+      fetch(`${API_URL}/api/skins`)
+        .then(res => res.json())
+        .then(data => {
+          const found = data.skins?.find((s: any) => s._id === skinId)
+          if (found) setSkin(found.colors)
+        })
+        .catch(err => console.error('Error loading skin:', err))
+    }
+  }, [skinId])
 
   const legalMoves = status === 'playing' && turn === playerColor
     ? generateLegalMoves(board, playerColor)
@@ -199,7 +226,8 @@ function GamePage() {
 
     const timer = setTimeout(async () => {
       try {
-        const res = await fetch('/api/move', {
+        const IA_URL = 'http://localhost:3001'
+        const res = await fetch(`${IA_URL}/api/move`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ board, player: 'black', algorithm: 'minimax' }),
@@ -254,6 +282,7 @@ function GamePage() {
             legalMoves={legalMoves}
             disabled={thinking || status !== 'playing' || turn !== playerColor}
             playerColor={playerColor}
+            skin={skin}
           />
         </div>
 

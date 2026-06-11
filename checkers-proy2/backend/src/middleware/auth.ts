@@ -1,6 +1,10 @@
 import type { Context, Next } from 'hono'
 import { createClerkClient } from '@clerk/backend'
 
+const clerkClient = createClerkClient({
+  secretKey: Bun.env.CLERK_SECRET_KEY || '',
+})
+
 export async function authMiddleware(c: Context<{ Variables: { userId: string } }>, next: Next) {
   const authHeader = c.req.header('Authorization')
 
@@ -19,12 +23,10 @@ export async function authMiddleware(c: Context<{ Variables: { userId: string } 
   }
 
   try {
-    const clerkClient = createClerkClient({
-      secretKey: Bun.env.CLERK_SECRET_KEY || '',
-    })
-    const session = await clerkClient.sessions.verifyToken(token)
-    c.set('userId', session.sub)
-  } catch {
+    const payload = await clerkClient.verifyToken(token)
+    c.set('userId', payload.sub)
+  } catch (err) {
+    console.error('Auth error:', err)
     c.set('userId', 'guest')
   }
 

@@ -1,0 +1,54 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "♛ Dames" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e7]: ♛
+        - generic [ref=e8]: Dames
+      - generic [ref=e9]:
+        - link "Jugar" [ref=e10] [cursor=pointer]:
+          - /url: /game
+        - link "Ranking" [ref=e11] [cursor=pointer]:
+          - /url: /ranking
+        - link "Skins" [ref=e12] [cursor=pointer]:
+          - /url: /skins
+        - link "Ingresar" [ref=e13] [cursor=pointer]:
+          - /url: /login
+  - main [ref=e14]:
+    - generic [ref=e265]:
+      - generic [ref=e266]:
+        - generic [ref=e267]:
+          - generic [ref=e270]: Tu turno
+          - generic [ref=e271]: 0 movimientos
+        - generic [ref=e272]:
+          - generic [ref=e363]:
+            - generic [ref=e364]: "8"
+            - generic [ref=e365]: "7"
+            - generic [ref=e366]: "6"
+            - generic [ref=e367]: "5"
+            - generic [ref=e368]: "4"
+            - generic [ref=e369]: "3"
+            - generic [ref=e370]: "2"
+            - generic [ref=e371]: "1"
+          - generic [ref=e372]:
+            - generic [ref=e373]: a
+            - generic [ref=e374]: b
+            - generic [ref=e375]: c
+            - generic [ref=e376]: d
+            - generic [ref=e377]: e
+            - generic [ref=e378]: f
+            - generic [ref=e379]: g
+            - generic [ref=e380]: h
+      - generic [ref=e382]:
+        - heading "Partida" [level=3] [ref=e383]
+        - generic [ref=e384]:
+          - generic [ref=e385]:
+            - generic [ref=e386]: Tú
+            - generic [ref=e387]: Rojas
+          - generic [ref=e388]:
+            - generic [ref=e389]: IA
+            - generic [ref=e390]: Blancas
+          - generic [ref=e392]:
+            - generic [ref=e393]: Movimientos
+            - generic [ref=e394]: "0"
+  - contentinfo [ref=e21]: Dames — un juego de damas con alma

@@ -1,4 +1,4 @@
-FROM oven/bun:1.2 AS base
+FROM docker.io/oven/bun:1.2 AS base
 WORKDIR /app
 
 COPY package.json bun.lock ./

@@ -24,8 +24,14 @@ router.post('/create-checkout', authMiddleware, async (c) => {
   if (!skin) return c.json({ error: 'Skin not found' }, 404)
   if (skin.free) return c.json({ error: 'Skin is free' }, 400)
 
-  const user = await User.findOne({ clerkId })
-  if (!user) return c.json({ error: 'User not found' }, 404)
+  let user = await User.findOne({ clerkId })
+  if (!user) {
+    user = await User.create({
+      clerkId,
+      username: `user_${clerkId.slice(0, 8)}`,
+      unlockedSkins: [],
+    })
+  }
 
   if (user.unlockedSkins.some((id: any) => id.toString() === skin._id.toString())) {
     return c.json({ error: 'Already owned' }, 400)
@@ -52,7 +58,7 @@ router.post('/create-checkout', authMiddleware, async (c) => {
         skinId: skin._id.toString(),
         clerkUserId: clerkId,
       },
-      success_url: `${origin}/skins?purchased=${skin._id}`,
+      success_url: `${origin}/skins?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/skins`,
     })
 
@@ -60,6 +66,48 @@ router.post('/create-checkout', authMiddleware, async (c) => {
   } catch (e: any) {
     console.error('Stripe checkout error:', e)
     return c.json({ error: 'Payment service unavailable' }, 500)
+  }
+})
+
+router.post('/verify-payment', authMiddleware, async (c) => {
+  const { sessionId } = await c.req.json()
+  const clerkId = c.get('userId')
+
+  if (!sessionId) return c.json({ error: 'sessionId required' }, 400)
+
+  try {
+    const stripe = getStripe()
+    const session = await stripe.checkout.sessions.retrieve(sessionId)
+
+    if (session.payment_status !== 'paid') {
+      return c.json({ error: 'Payment not completed' }, 400)
+    }
+
+    const { skinId, clerkUserId } = session.metadata || {}
+
+    if (!skinId || !clerkUserId || clerkUserId !== clerkId) {
+      return c.json({ error: 'Invalid session metadata' }, 400)
+    }
+
+    let user = await User.findOne({ clerkId })
+    if (!user) {
+      user = await User.create({
+        clerkId,
+        username: `user_${clerkId.slice(0, 8)}`,
+        unlockedSkins: [],
+      })
+    }
+
+    if (!user.unlockedSkins.some((id: any) => id.toString() === skinId)) {
+      user.unlockedSkins.push(skinId)
+      await user.save()
+      console.log(`Skin ${skinId} unlocked for user ${clerkId}`)
+    }
+
+    return c.json({ success: true, skinId })
+  } catch (e: any) {
+    console.error('Payment verification error:', e)
+    return c.json({ error: 'Payment verification failed' }, 500)
   }
 })
 

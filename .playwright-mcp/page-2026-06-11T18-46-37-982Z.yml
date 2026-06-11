@@ -1,0 +1,39 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "♛ Dames" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e7]: ♛
+        - generic [ref=e8]: Dames
+      - generic [ref=e9]:
+        - link "Jugar" [ref=e10] [cursor=pointer]:
+          - /url: /game
+        - link "Ranking" [ref=e11] [cursor=pointer]:
+          - /url: /ranking
+        - link "Skins" [ref=e12] [cursor=pointer]:
+          - /url: /skins
+        - link "Ingresar" [ref=e13] [cursor=pointer]:
+          - /url: /login
+  - main [ref=e14]:
+    - generic [ref=e228]:
+      - generic [ref=e229]:
+        - generic [ref=e230]: ♛
+        - heading "Nueva Partida" [level=1] [ref=e231]
+        - paragraph [ref=e232]: elige tu color y comienza
+      - generic [ref=e234]:
+        - generic [ref=e235]:
+          - paragraph [ref=e236]: Tu color
+          - generic [ref=e237]:
+            - button "Rojas" [ref=e238]:
+              - generic [ref=e240]: Rojas
+            - button "Blancas" [ref=e241]:
+              - generic [ref=e243]: Blancas
+        - generic [ref=e244]:
+          - paragraph [ref=e245]: Skin del tablero
+          - generic [ref=e246]:
+            - button "Clásico" [ref=e247]:
+              - generic [ref=e254]: Clásico
+            - button "Rosa" [active] [ref=e255]:
+              - generic [ref=e262]: Rosa
+        - button "Comenzar Partida" [ref=e263]
+  - contentinfo [ref=e21]: Dames — un juego de damas con alma
